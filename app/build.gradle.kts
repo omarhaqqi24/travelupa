@@ -52,4 +52,5 @@ dependencies {
     implementation ("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
 
     debugImplementation ("androidx.compose.ui:ui-tooling:1.6.0")
+    implementation("io.coil-kt:coil-compose:2.4.0")
 }
