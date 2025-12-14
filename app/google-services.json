@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1088942343370",
+    "project_id": "travelupa-4a10c",
+    "storage_bucket": "travelupa-4a10c.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1088942343370:android:18e7193fe2ab2328702033",
+        "android_client_info": {
+          "package_name": "com.example.travelupa"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBCrqi8prQ5Wg5ngvynF5btLclnDkBJJqo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
