@@ -82,17 +82,8 @@ fun AppNavigation(currentUser: FirebaseUser?) {
         startDestination = if (currentUser != null) {
             Log.w("Current User", currentUser.toString())
             Screen.RekomendasiTempat.route
-        } else Screen.Greeting.route
+        } else Screen.Login.route
     ) {
-        composable(Screen.Greeting.route) {
-            GreetingScreen(
-                onStart = {
-                    navController.navigate(Screen.Login.route) {
-                        popUpTo(Screen.Greeting.route) {  inclusive = true }
-                    }
-                }
-            )
-        }
         composable(Screen.Login.route) {
             LoginScreen(
                 onLoginSuccess = {
@@ -128,44 +119,6 @@ fun AppNavigation(currentUser: FirebaseUser?) {
                     }
                 }
             )
-        }
-    }
-}
-
-@Composable
-fun GreetingScreen(
-    onStart: () -> Unit
-) {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center,
-    ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-        ) {
-            Text(
-                text = "Selamat Datang di Travelupa!",
-                style = MaterialTheme.typography.h4,
-                textAlign = TextAlign.Center
-            )
-            Spacer (modifier = Modifier.height(16.dp))
-            Text(
-                text = "Solusi buat kamu yang lupa kemana-mana",
-                style = MaterialTheme.typography.h6,
-                textAlign = TextAlign.Center
-            )
-        }
-        Button(
-            onClick = onStart,
-            modifier = Modifier
-                .width(360.dp)
-                .align(Alignment.BottomCenter)
-                .padding(bottom = 16.dp)
-        ) {
-            Text(text = "Mulai")
         }
     }
 }
@@ -409,6 +362,42 @@ fun LoginScreen(
             onClick = { onRegisterClick() }
         ) {
             Text("Belum punya akun? Daftar")
+        }
+    }
+}
+
+@Composable
+fun GreetingScreen() {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center,
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            Text(
+                text = "Selamat Datang di Travelupa!",
+                style = MaterialTheme.typography.h4,
+                textAlign = TextAlign.Center
+            )
+            Spacer (modifier = Modifier.height(16.dp))
+            Text(
+                text = "Solusi buat kamu yang lupa kemana-mana",
+                style = MaterialTheme.typography.h6,
+                textAlign = TextAlign.Center
+            )
+        }
+        Button(
+            onClick = { /*TODO*/ },
+            modifier = Modifier
+                .width(360.dp)
+                .align(Alignment.BottomCenter)
+                .padding(bottom = 16.dp)
+        ) {
+            Text(text = "Mulai")
         }
     }
 }
