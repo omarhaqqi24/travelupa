@@ -44,6 +44,7 @@ import com.example.travelupa.ui.RegisterScreen
 import com.example.travelupa.ui.theme.TravelupaTheme
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.Dispatchers
@@ -56,13 +57,16 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         FirebaseApp.initializeApp(this)
+
+        val currentUser : FirebaseUser? = FirebaseAuth.getInstance().currentUser
+
         setContent {
             TravelupaTheme {
                 Surface (
                     modifier = Modifier.fillMaxSize(),
                     color = Color.White
                 ) {
-                    AppNavigation()
+                    AppNavigation(currentUser)
                 }
             }
         }
@@ -70,13 +74,25 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun AppNavigation() {
+fun AppNavigation(currentUser: FirebaseUser?) {
     val navController = rememberNavController()
 
     NavHost(
         navController = navController,
-        startDestination = Screen.Login.route
+        startDestination = if (currentUser != null) {
+            Log.w("Current User", currentUser.toString())
+            Screen.RekomendasiTempat.route
+        } else Screen.Greeting.route
     ) {
+        composable(Screen.Greeting.route) {
+            GreetingScreen(
+                onStart = {
+                    navController.navigate(Screen.Login.route) {
+                        popUpTo(Screen.Greeting.route) {  inclusive = true }
+                    }
+                }
+            )
+        }
         composable(Screen.Login.route) {
             LoginScreen(
                 onLoginSuccess = {
@@ -106,9 +122,50 @@ fun AppNavigation() {
         composable(Screen.RekomendasiTempat.route) {
             RekomendasiTempatScreen(
                 onBackToLogin = {
-                    navController.navigateUp()
+                    FirebaseAuth.getInstance().signOut()
+                    navController.navigate(Screen.Login.route) {
+                        popUpTo(Screen.RekomendasiTempat.route) { inclusive = true}
+                    }
                 }
             )
+        }
+    }
+}
+
+@Composable
+fun GreetingScreen(
+    onStart: () -> Unit
+) {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center,
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            Text(
+                text = "Selamat Datang di Travelupa!",
+                style = MaterialTheme.typography.h4,
+                textAlign = TextAlign.Center
+            )
+            Spacer (modifier = Modifier.height(16.dp))
+            Text(
+                text = "Solusi buat kamu yang lupa kemana-mana",
+                style = MaterialTheme.typography.h6,
+                textAlign = TextAlign.Center
+            )
+        }
+        Button(
+            onClick = onStart,
+            modifier = Modifier
+                .width(360.dp)
+                .align(Alignment.BottomCenter)
+                .padding(bottom = 16.dp)
+        ) {
+            Text(text = "Mulai")
         }
     }
 }
@@ -352,42 +409,6 @@ fun LoginScreen(
             onClick = { onRegisterClick() }
         ) {
             Text("Belum punya akun? Daftar")
-        }
-    }
-}
-
-@Composable
-fun GreetingScreen() {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center,
-    ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-        ) {
-            Text(
-                text = "Selamat Datang di Travelupa!",
-                style = MaterialTheme.typography.h4,
-                textAlign = TextAlign.Center
-            )
-            Spacer (modifier = Modifier.height(16.dp))
-            Text(
-                text = "Solusi buat kamu yang lupa kemana-mana",
-                style = MaterialTheme.typography.h6,
-                textAlign = TextAlign.Center
-            )
-        }
-        Button(
-            onClick = { /*TODO*/ },
-            modifier = Modifier
-                .width(360.dp)
-                .align(Alignment.BottomCenter)
-                .padding(bottom = 16.dp)
-        ) {
-            Text(text = "Mulai")
         }
     }
 }
